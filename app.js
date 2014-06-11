@@ -21,17 +21,18 @@ sock.client.debug = function() {
 
 sock.send = function(data) {
     sock.client.send('/exchange/inboundWorkExchange', {"reply-to":"/temp-queue/queue"}, data);
+    sock.createSubscription();
 };
 
 sock.on_connect = function(x) {
     // something like followed can be done here, to connect to some topic on websocket initialization
-    //id = client.subscribe('/topic/bunny', function(d) {});
+    //sock.client.subscribe('/queue/defaultResponseQueue', sock.onmessage);
 };
 
-// Default receive callback to get message from temporary queues
-// Auto-bind to anonymous queue declared while specifying reply-to header
-sock.client.onreceive = function(m) {
-    console.log(m.body);
+sock.createSubscription = function(){
+    sock.client.subscriptions['/temp-queue/queue'] = function(message) {
+        $("#response").html(message.body);
+    };
 };
 
 sock.on_error = function() {
