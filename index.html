@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.sockjs.org/sockjs-0.3.4.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.1/stomp.js"></script>
+    <script src="app.js"></script>
+    <title>RabbitMQ Web STOMP Example</title>
+</head>
+<body lang="en">
+
+    <h1>Search for product</h1>
+    <form onSubmit="event.preventDefault(); return priceCheck.handleFormSubmit();">
+        <input type="text" id="lookfor" name="lookfor" />
+        <button type="submit">Submit seach</button>
+    </form>
+
+</body>
+</html>
