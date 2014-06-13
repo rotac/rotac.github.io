@@ -3,6 +3,10 @@
 if(!priceCheck){ var priceCheck = {}; }
 if(!sock){ var sock = {}; sock.client = {}; }
 
+priceCheck.handleFormSubmit = function() {
+    sock.client = sock.init();
+};
+
 sock.init = function(){
     var rabbit = "http://188.226.241.20:15674/stomp";
     var ws = new SockJS(rabbit);
@@ -13,10 +17,8 @@ sock.init = function(){
     return client;
 };
 
-sock.client.debug = function() {
-    if (window.console && console.log && console.log.apply) {
-        console.log.apply(console, arguments);
-    }
+sock.on_connect = function(x) {
+    sock.send($("#lookfor").val());
 };
 
 sock.send = function(data) {
@@ -24,25 +26,21 @@ sock.send = function(data) {
     sock.createSubscription();
 };
 
-sock.on_connect = function(x) {
-    // something like followed can be done here, to connect to some topic on websocket initialization
-    //sock.client.subscribe('/queue/defaultResponseQueue', sock.onmessage);
+sock.createSubscription = function(){
+    sock.client.subscriptions['/temp-queue/queue'] = sock.handleResponse;
 };
 
-sock.createSubscription = function(){
-    sock.client.subscriptions['/temp-queue/queue'] = function(message) {
-        $("#response").html(message.body);
-    };
+sock.handleResponse = function(message) {
+    $("#response").html(message.body);
+    sock.client.disconnect(function() {});
+};
+
+sock.client.debug = function() {
+    if (window.console && console.log && console.log.apply) {
+        console.log.apply(console, arguments);
+    }
 };
 
 sock.on_error = function() {
     console.log('error');
 };
-
-priceCheck.handleFormSubmit = function() {
-    sock.send($("#lookfor").val());
-};
-
-$(function(){
-    sock.client = sock.init();
-});
